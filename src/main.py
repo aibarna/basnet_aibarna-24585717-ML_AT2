@@ -29,7 +29,7 @@ This is a project that demonstrates a machine learning model.
 """
 
 # GitHub repository link
-github_repo = "Link to the GitHub repository: [Your GitHub Repo URL]"
+github_repo = "https://github.com/aibarna/basnet_aibarna-24585717-ML_AT2"
 
 
 @app.get("/", summary="Basic Info of the project")
@@ -45,6 +45,20 @@ async def welcome_message():
 # Define a POST endpoint to greet a person
 @app.post("/sales/stores/items/")
 async def predict_sales(model: ModelData):
+    """_summary_
+
+    Args:
+        model (ModelData): _description_
+        date: format should be similar to 2023-01-01
+        store_id: 1
+        item_id: 1
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
         prediction_model = pickle.load(open('prediction_model.pkl', 'rb'))
 
@@ -66,8 +80,22 @@ async def predict_sales(model: ModelData):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+
 @app.post("/sales/national/")
 async def predict_sales(model: ForecastSales):
+    """_summary_
+
+    Args:
+        model (ForecastSales): _description_
+        steps: number of forecast to make
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
         prediction_model = pickle.load(open('forecast_model.pkl', 'rb'))
         # prediction_model.predict
