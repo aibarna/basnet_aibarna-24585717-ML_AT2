@@ -55,3 +55,36 @@ Project Organization
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+
+Guide 
+
+create a new venv using the command python3 -m venv venv
+
+
+once you have venv install the requirements for project using following code
+
+pip install -r requirements.txt
+
+now you can run the app using command 
+
+python main.py
+
+There are five apis 
+
+** first one is /docs
+
+where you can check for the documentation of different apis.
+
+
+** second one is forecasting the revenue 
+
+Example endpoint is 
+http://13.52.217.184:8000/sales/national/?steps=4
+
+where steps =4 is the number of days.
+
+
+** third one is http://13.52.217.184:8000/sales/stores/items/?item_id=1&date=2023-01-01&store_id=1
+
+where item and store ids are given along with date.
