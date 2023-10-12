@@ -6,7 +6,7 @@ import datetime
 import lightgbm as lgb
 
 # Create a FastAPI app
-app = FastAPI(reload=True)
+app = FastAPI()
 
 # Create a Pydantic model to validate request data
 class ModelData(BaseModel):
