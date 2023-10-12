@@ -6,7 +6,7 @@ import datetime
 import lightgbm as lgb
 
 # Create a FastAPI app
-app = FastAPI()
+app = FastAPI(reload=True)
 
 # Create a Pydantic model to validate request data
 class ModelData(BaseModel):
@@ -15,8 +15,8 @@ class ModelData(BaseModel):
     date: str
 
 
-class ForecastSales(BaseModel):
-    steps: int
+# class ForecastSales(BaseModel):
+    # steps: int
 
 
 # Project description
@@ -42,16 +42,14 @@ async def welcome_message():
     return Response(content=f"message: Welcome to the Sales Prediction Project", media_type="text/plain")
 
 
-# Define a POST endpoint to greet a person
-@app.post("/sales/stores/items/")
-async def predict_sales(model: ModelData):
+@app.get("/sales/stores/items/" ,summary="Predict revenue for item and store on date ")
+async def predict_sales(item_id: int, date:str, store_id:int):
     """_summary_
 
     Args:
-        model (ModelData): _description_
-        date: format should be similar to 2023-01-01
-        store_id: 1
-        item_id: 1
+        date:str: format should be similar to 2023-01-01
+        store_id: int: 1
+        item_id:int: 1
 
     Raises:
         HTTPException: _description_
@@ -63,11 +61,11 @@ async def predict_sales(model: ModelData):
         prediction_model = pickle.load(open('prediction_model.pkl', 'rb'))
 
         # Convert the date string to a datetime object
-        datetime_ = datetime.datetime.strptime(model.date, '%Y-%m-%d')
+        datetime_ = datetime.datetime.strptime(date, '%Y-%m-%d')
 
         df = pd.DataFrame([{
-            "item_id": model.item_id,
-            "store_id": model.store_id,
+            "item_id": item_id,
+            "store_id": store_id,
             "day": datetime_.date().day,
             "month": datetime_.date().month,
             "year": datetime_.date().year
@@ -76,19 +74,22 @@ async def predict_sales(model: ModelData):
 
         # prediction_model.predict
         res = list(prediction_model.predict(df))
-        return {"The output is ": [round(i,2) for i in res]}
+        str_val = ""
+        for i in res:
+            str_val += " " + str(round(i,2))
+
+        return Response(content=f"The output is for item {item_id} in store {store_id} on {date} is {str_val}", media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
 
-@app.post("/sales/national/")
-async def predict_sales(model: ForecastSales):
+@app.get("/sales/national/" ,summary="Predict revenue next days ")
+async def predict_sales(steps:int):
     """_summary_
 
     Args:
-        model (ForecastSales): _description_
-        steps: number of forecast to make
+        steps:int : number of forecast to make
 
     Raises:
         HTTPException: _description_
@@ -99,8 +100,11 @@ async def predict_sales(model: ForecastSales):
     try:
         prediction_model = pickle.load(open('forecast_model.pkl', 'rb'))
         # prediction_model.predict
-        res = list(prediction_model.forecast(model.steps))
-        return {"The output is ": [round(i,2) for i in res]}
+        res = list(prediction_model.forecast(steps))
+        str_val = ""
+        for i in res:
+            str_val += " " + str(round(i,2))
+        return Response(content=f"The output is for the item for next {steps} days  are: "+ str_val, media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
