@@ -58,7 +58,7 @@ async def predict_sales(item_id: int, date:str, store_id:int):
         _type_: _description_
     """
     try:
-        prediction_model = pickle.load(open('prediction_model.pkl', 'rb'))
+        prediction_model = pickle.load(open('src/prediction_model.pkl', 'rb'))
 
         # Convert the date string to a datetime object
         datetime_ = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -98,7 +98,7 @@ async def predict_sales(steps:int):
         _type_: _description_
     """
     try:
-        prediction_model = pickle.load(open('forecast_model.pkl', 'rb'))
+        prediction_model = pickle.load(open('src/forecast_model.pkl', 'rb'))
         # prediction_model.predict
         res = list(prediction_model.forecast(steps))
         str_val = ""
@@ -114,5 +114,5 @@ async def predict_sales(steps:int):
 if __name__ == "__main__":
     import uvicorn
     import os  # Add this import
-    port = int(os.environ.get("PORT", 8000))  # Use the PORT environment variable or default to 8000
+    port = int(os.environ.get("PORT", 8002))  # Use the PORT environment variable or default to 8000
     uvicorn.run(app, host="0.0.0.0", port=port)
