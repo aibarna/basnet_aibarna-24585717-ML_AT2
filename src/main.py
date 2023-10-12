@@ -112,7 +112,6 @@ async def predict_sales(steps:int):
 
 
 if __name__ == "__main__":
-    if __name__ == "__main__":
     import uvicorn
     import os  # Add this import
     port = int(os.environ.get("PORT", 8000))  # Use the PORT environment variable or default to 8000
